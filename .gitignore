@@ -132,3 +132,4 @@ dmypy.json
 .idea/
 demo/
 main/main.py
+main/api_mail.py

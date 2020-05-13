@@ -14,15 +14,12 @@ import requests
 
 
 class CMDB(object):
-    """
-    优维数据接口
-    """
     # 固定的请求绑定信息
-    _user = "demo"
+    _user = ""
     _content_type = "application/json"
-    _host = "cmdb.devops.com"
-    _org = "1800"
-    _ip = "10.10.10.10"
+    _host = ""
+    _org = ""
+    _ip = ""
     _obj = None
     json_data = None
 
