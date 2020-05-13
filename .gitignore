@@ -133,3 +133,4 @@ dmypy.json
 demo/
 main/main.py
 main/api_mail.py
+main/api_cmdb.py
