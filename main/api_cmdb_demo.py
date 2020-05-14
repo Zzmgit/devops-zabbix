@@ -5,10 +5,10 @@
 @Version        :  zhangzheming_zzm@foxmail.com
 ------------------------------------
 @File           :  api_cmdb_demo.py
-@Description    :  
+@Description    :
 @CreateTime     :  2020/5/13 11:16
 ------------------------------------
-@ModifyTime     :  
+@ModifyTime     :
 """
 import requests
 
