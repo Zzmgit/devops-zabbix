@@ -4,7 +4,7 @@
 @Author         :  Zzm
 @Version        :  zhangzheming_zzm@foxmail.com
 ------------------------------------
-@File           :  api_mail_demo.py
+@File           :  demo_mail.py
 @Description    :  
 @CreateTime     :  2020/5/13 11:19
 ------------------------------------
@@ -68,6 +68,7 @@ def send_mail(body, attachment=None, attache_title=None, type_='html'):
         print("Error: %s 无法发送邮件!!!" % e)
 
 
+# 测试
 msg = """
         <h2>测试表</h2><br/>
         <table border="1">
