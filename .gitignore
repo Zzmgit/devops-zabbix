@@ -137,3 +137,4 @@ main/api_mail.py
 main/api_cmdb.py
 main/cmdbTozabbix.py
 main/z.xlsx
+main/z_user.xlsx
