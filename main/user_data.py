@@ -10,18 +10,19 @@
 ------------------------------------
 @ModifyTime     :  
 """
-import json
 import os
+import gc
+import json
 
 import pandas as pd
 from api_zabbix import Zabbix
-from api_cmdb import get_user_data
-from api_mail import send_mail
+from local_api_cmdb import get_user_data
+from local_api_mail import send_mail
 
-url = "https://xxx.xxx.com.cn/api_jsonrpc.php"
+url = "https://xxx.xsxs.com.cn/api_jsonrpc.php"
 header = {"Content-Type": "application/json"}
 user = "xxxx"
-password = "aa@xxxxx"
+password = "xxxxx"
 
 zbx = Zabbix(url, user, password)
 cm_user = get_user_data()
@@ -76,9 +77,10 @@ new_df.to_excel(writer, sheet_name="new", header=None, index=False, )
 writer.save()
 
 msg = """
-    <h2>通知</h2>
-    <p>监控小组，本次CMDB用户数据同步存在数据变动，详情请查阅附件</a></p>
+    <h2>通知：</h2>
+    <p>监控小组，本次CMDB用户数据同步，存在数据变更。具体变更详情，请进行附件查阅！</a></p>
     """
 root_dir = os.path.dirname(os.path.abspath('.'))
 attache = os.path.join(root_dir, r'main\z_user.xlsx')
 send_mail(body=msg, attachment=attache, attache_title='user_changed_data.xlsx')
+gc.collect()

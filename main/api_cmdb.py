@@ -4,7 +4,7 @@
 @Author         :  Zzm
 @Version        :  zhangzheming_zzm@foxmail.com
 ------------------------------------
-@File           :  demo_cmdb.py
+@File           :  api_cmdb.py
 @Description    :
 @CreateTime     :  2020/5/13 11:16
 ------------------------------------

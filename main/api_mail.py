@@ -4,7 +4,7 @@
 @Author         :  Zzm
 @Version        :  zhangzheming_zzm@foxmail.com
 ------------------------------------
-@File           :  demo_mail.py
+@File           :  api_mail.py
 @Description    :  
 @CreateTime     :  2020/5/13 11:19
 ------------------------------------
