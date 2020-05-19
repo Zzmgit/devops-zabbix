@@ -8,7 +8,7 @@
 @Description    :
 @CreateTime     :  2020/5/13 11:16
 ------------------------------------
-@ModifyTime     :
+@ModifyTime     :  2020/5/19 19:45
 """
 import requests
 
@@ -81,25 +81,28 @@ class CMDB(object):
 def get_user_data():
     """
     获取cmdb所有用户信息
-    :return:
+    :return: [{'alias': 'xxx', 'name': 'xxx'}]
     """
-    cmdb_user_list = []
-    cmdb_user_data = CMDB("USER", ["name", ], page_size=1000).data
-    for i in cmdb_user_data:
-        cmdb_user_list.append(i["name"])
-    return cmdb_user_list
+    user_data = CMDB("USER", ["name", "nickname"], page_size=1000).data
+    # # 原始for循环写法
+    # user_list = []
+    # for i in user_data:
+    #     user_list.append({'name': i.get('nickname'), 'alias': i.get('name')})
+    # return user_list
+    # 列表推导式写法
+    return [{'name': i.get('nickname'), 'alias': i.get('name')} for i in user_data]
 
 
 def get_userGreop_data():
     """
     获取cmdb所有应用系统信息
-    :return:
+    :return: [{'product_code': 'xxx', 'name': 'xxx'}]
     """
-    cm_ugrp_list = []
-    cm_ugrp_data = CMDB("BUSINESS", ["name", "product_code"], page_size=1000).data
-    for i in cm_ugrp_data:
-        cm_ugrp_list.append({
-            "product_code": i['product_code'],
-            "name": i['name'],
-        })
-    return cm_ugrp_list
+    ugrp_data = CMDB("BUSINESS", ["name", "product_code"], page_size=1000).data
+    # # 原始for循环写法
+    # ugrp_list = []
+    # for i in ugrp_data:
+    #     ugrp_list.append({"product_code": i.get('product_code'), "name": i.get('name')})
+    # return ugrp_list
+    # 列表推导式写法
+    return [{"product_code": i.get('product_code'), "name": i.get('name')} for i in ugrp_data]

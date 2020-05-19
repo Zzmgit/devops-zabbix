@@ -36,21 +36,11 @@ superAdmin = [{'alias': u'Admin', 'userid': u'1', 'name': u'Zabbix'},
               {'alias': u'zhongzhimou01', 'userid': u'5', 'name': u'\u949f\u5fd7\u8c0b'},
               {'alias': u'liangqiguang', 'userid': u'6', 'name': u'\u6881\u555f\u5149'}]
 
-# za_ulist = [i for i in za_user ]
-za_ulist = []
-for i in za_user:  # i --> {'alias': u'Admin', 'userid': u'1', 'name': u'Zabbix'}
-    za_ulist.append({'userid': i.get('userid'), 'alias': i.get('alias'), 'name': i.get('name')})
-
+za_ulist = [{'userid': i.get('userid'), 'alias': i.get('alias'), 'name': i.get('name')} for i in za_user]
 # 将zabbix所有已有用户bip存为list --> [u'Admin', u'guest', u'apiuser', u'zhanghuiyun02',...]
-za_tmp = []
-for i in za_ulist:
-    za_tmp.append(i.get('alias'))
-
+za_tmp = [i['alias'] for i in za_ulist]
 # 将cmdb所有已有用户bip存为list --> [u'wenziwu', u'caishanlun', u'chenjunxu02',...]
-cm_tmp = []
-for i in cm_user:
-    cm_tmp.append(i.get('alias'))
-
+cm_tmp = [i['alias'] for i in cm_user]
 # 去除超级管理员角色
 for i in superAdmin:
     if i in za_ulist:
@@ -85,6 +75,6 @@ msg = """
     <p>监控小组，本次CMDB用户数据同步，存在数据变更。具体变更详情，请进行附件查阅！</a></p>
     """
 root_dir = os.path.dirname(os.path.abspath('.'))
-attache = os.path.join(root_dir, r'main\user.xlsx')
+attache = os.path.join(root_dir, r'main\z_user.xlsx')
 send_mail(body=msg, attachment=attache, attache_title='user_changed_data.xlsx')
 gc.collect()
