@@ -132,9 +132,8 @@ dmypy.json
 .idea/
 demo/
 main/test.py
-main/main.py
 main/local_api_mail.py
 main/local_api_cmdb.py
 main/local_user_data.py
-main/z.xlsx
-main/z_user.xlsx
+main/local_usergrp_data.py
+main/z_usergrp.xlsx
