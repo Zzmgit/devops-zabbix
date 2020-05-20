@@ -136,4 +136,3 @@ main/local_api_mail.py
 main/local_api_cmdb.py
 main/local_user_data.py
 main/local_usergrp_data.py
-main/z_usergrp.xlsx

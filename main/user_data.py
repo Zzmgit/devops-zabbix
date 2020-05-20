@@ -8,12 +8,13 @@
 @Description    :  
 @CreateTime     :  2020/5/14 17:26
 ------------------------------------
-@ModifyTime     :  
+@ModifyTime     :  2020/5/20 14:24
 """
 import os
 import gc
 import json
 import pandas as pd
+
 from api_zabbix import Zabbix
 from api_cmdb import get_user_data
 from api_mail import send_mail
@@ -54,13 +55,13 @@ for i in za_ulist[6:]:    # za_ulist[6:]: 去除Zabbix已有的超级管理员�
 writer = pd.ExcelWriter("user.xlsx")
 del_df = pd.DataFrame(del_name)
 new_df = pd.DataFrame(new_name)
-del_df.to_excel(writer, sheet_name="del", header=None, index=False, )
-new_df.to_excel(writer, sheet_name="new", header=None, index=False, )
+del_df.to_excel(writer, sheet_name="del_user", header=None, index=False, )
+new_df.to_excel(writer, sheet_name="new_user", header=None, index=False, )
 writer.save()
 
 msg = """
-    <h2>通知：</h2>
-    <p>监控小组，本次CMDB用户数据同步，存在数据变更。具体变更详情，请进行附件查阅！</a></p>
+    <h2>用户数据同步通知：</h2>
+    <p>监控小组注意，本次用户数据同步 "CMDB to Zabbix"，用户数据存在变更情况。具体变更数据，请查阅附件进行了解！</a></p>
     """
 root_dir = os.path.dirname(os.path.abspath('.'))
 attache = os.path.join(root_dir, r'main\z_user.xlsx')
