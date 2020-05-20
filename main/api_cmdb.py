@@ -94,3 +94,29 @@ def get_userGreop_data():
     """
     ugrp_data = CMDB("BUSINESS", ["name", "product_code"], page_size=1000).data
     return [{"product_code": i.get('product_code'), "name": i.get('name')} for i in ugrp_data]
+
+
+def get_host_data():
+    """
+    获取cmdb所有主机相关系统信息
+    :return:[{'business': 'xxx', 'vis_name': 'xxx', 'ip': 'xxx', 'hostname': 'xxx', 'product_code': 'xxx', 'os': 'xxx'}]
+    """
+    host_query = {'_environment': {'$eq': '生产'}, }
+    host_data = CMDB("HOST", ["osSystem", "BUSINESS.product_code", "BUSINESS.name", "ip", "hostname", "_environment",
+                              "_deviceList_CLUSTER.appId.name"], page_size=1000, query=host_query).data
+    host_list = []
+    for i in host_data:
+        if not i.get('osSystem'):
+            continue
+        if not i.get('BUSINESS'):
+            continue
+        if i["ip"][0:6] != '10.10.':
+            pro_info = [i["BUSINESS"][0]["product_code"], i["BUSINESS"][0]["name"],
+                        i["_deviceList_CLUSTER"][0]["appId"][0]["name"], i["ip"]]
+            host_list.append({"product_code": i["BUSINESS"][0]["product_code"],
+                              "ip": i["ip"],
+                              "os": i["osSystem"],
+                              "hostname": i["hostname"],
+                              "business": [i["name"] for i in i["BUSINESS"]],
+                              "vis_name": "_".join(pro_info)})
+    return host_list
