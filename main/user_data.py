@@ -33,7 +33,7 @@ za_ulist = [{'userid': i.get('userid'), 'alias': i.get('alias'), 'name': i.get('
 za_tmp = [i['alias'] for i in za_ulist]
 # 将cmdb所有已有用户bip存为list --> [u'wenziwu', u'caishanlun', u'chenjunxu02',...]
 cm_tmp = [i['alias'] for i in cm_user]
-print za_ulist[6:]
+
 # 批量创建用户，并校验用户数据是否重复
 new_name = []
 for i in cm_user:
@@ -44,9 +44,9 @@ for i in cm_user:
         else:
             zbx.user_Create(alias=i['alias'], name="None")
 
-# zabbix批量同步删除cmdb已删除数据
+# zabbix批量同步删除cmdb已删除用户数据
 del_name = []
-for i in za_ulist[6:]:    # za_ulist[6:]去除Zabbix已有的超级管理员账号
+for i in za_ulist[6:]:    # za_ulist[6:]: 去除Zabbix已有的超级管理员账号
     if i['alias'] not in cm_tmp:
         del_name.append({'BIP': i['alias'], 'name': i['name']})
         zbx.user_Delete(userid_list=[i['userid']])
