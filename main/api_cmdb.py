@@ -84,12 +84,6 @@ def get_user_data():
     :return: [{'alias': 'xxx', 'name': 'xxx'}]
     """
     user_data = CMDB("USER", ["name", "nickname"], page_size=1000).data
-    # # 原始for循环写法
-    # user_list = []
-    # for i in user_data:
-    #     user_list.append({'name': i.get('nickname'), 'alias': i.get('name')})
-    # return user_list
-    # 列表推导式写法
     return [{'name': i.get('nickname'), 'alias': i.get('name')} for i in user_data]
 
 
@@ -99,10 +93,4 @@ def get_userGreop_data():
     :return: [{'product_code': 'xxx', 'name': 'xxx'}]
     """
     ugrp_data = CMDB("BUSINESS", ["name", "product_code"], page_size=1000).data
-    # # 原始for循环写法
-    # ugrp_list = []
-    # for i in ugrp_data:
-    #     ugrp_list.append({"product_code": i.get('product_code'), "name": i.get('name')})
-    # return ugrp_list
-    # 列表推导式写法
     return [{"product_code": i.get('product_code'), "name": i.get('name')} for i in ugrp_data]

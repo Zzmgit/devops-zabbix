@@ -85,4 +85,4 @@ msg = """
 root_dir = os.path.dirname(os.path.abspath('.'))
 path = os.path.join(root_dir, r'main')
 attache = os.path.join(root_dir, r'main\z.xlsx')
-send_mail(body=msg, attachment=attache, attache_title='changed_data.xlsx')
+# send_mail(body=msg, attachment=attache, attache_title='changed_data.xlsx')
