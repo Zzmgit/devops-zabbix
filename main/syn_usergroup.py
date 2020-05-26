@@ -55,7 +55,7 @@ for i in za_ugdata:
         del_gname.append({'code': i['code'], 'name': i['name']})
         zbx.userGroup_Delete(ugrpid_list=[i['usrgrpid']])
 
-writer = pd.ExcelWriter("usergroup.xlsx")
+writer = pd.ExcelWriter("_usergroup.xlsx")
 del_df = pd.DataFrame(del_gname)
 new_df = pd.DataFrame(new_gname)
 del_df.to_excel(writer, sheet_name="del_usergroup", header=None, index=False, )
@@ -67,6 +67,6 @@ msg = """
     <p>监控小组注意，本次用户群组数据同步 "CMDB to Zabbix"，用户群组数据存在变更情况。具体变更数据，请查阅附件进行了解！</a></p>
     """
 root_dir = os.path.dirname(os.path.abspath('.'))
-attache = os.path.join(root_dir, r'main\usergroup.xlsx')
+attache = os.path.join(root_dir, r'main\_usergroup.xlsx')
 send_mail(body=msg, attachment=attache, attache_title='usergroup_changed_data.xlsx')
 gc.collect()

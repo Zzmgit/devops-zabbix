@@ -49,7 +49,7 @@ for i in za_ulist[6:]:
         del_name.append({'BIP': i['alias'], 'name': i['name']})
         zbx.user_Delete(userid_list=[i['userid']])
 
-writer = pd.ExcelWriter("user.xlsx")
+writer = pd.ExcelWriter("_user.xlsx")
 del_df = pd.DataFrame(del_name)
 new_df = pd.DataFrame(new_name)
 del_df.to_excel(writer, sheet_name="del_user", header=None, index=False, )
@@ -61,6 +61,6 @@ msg = """
         <p>监控小组注意，本次用户数据同步 "CMDB to Zabbix"，用户数据存在变更情况。具体变更数据，请查阅附件进行了解！</a></p>
       """
 root_dir = os.path.dirname(os.path.abspath('.'))
-attache = os.path.join(root_dir, r'main\z_user.xlsx')
+attache = os.path.join(root_dir, r'main\_user.xlsx')
 send_mail(body=msg, attachment=attache, attache_title='user_changed_data.xlsx')
 gc.collect()

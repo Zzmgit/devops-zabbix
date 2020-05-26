@@ -61,7 +61,7 @@ for i in za_hgdata:
     if i['name'] not in cm_hgtmp:
         del_gname.append({'code': i['code'], 'name': i['name']})
 
-writer = pd.ExcelWriter("hostgroup.xlsx")
+writer = pd.ExcelWriter("_hostgroup.xlsx")
 del_df = pd.DataFrame(del_gname)
 new_df = pd.DataFrame(new_gname)
 del_df.to_excel(writer, sheet_name="del_hostgroup", header=None, index=False, )
@@ -73,6 +73,6 @@ msg = """
         <p>监控小组注意，本次主机群组数据同步 "CMDB to Zabbix"，主机群组数据存在变更情况。具体变更数据，请查阅附件进行了解！</a></p>
       """
 root_dir = os.path.dirname(os.path.abspath('.'))
-attache = os.path.join(root_dir, r'main\hostgroup.xlsx')
+attache = os.path.join(root_dir, r'main\_hostgroup.xlsx')
 send_mail(body=msg, attachment=attache, attache_title='hostgroup_changed_data.xlsx')
 gc.collect()
