@@ -135,4 +135,6 @@ main/test.py
 main/local_api_mail.py
 main/local_api_cmdb.py
 main/local_user_data.py
-main/local_usergrp_data.py
+main/local_host_data.py
+main/local_usergroup_data.py
+main/local_hostgroup_data.py

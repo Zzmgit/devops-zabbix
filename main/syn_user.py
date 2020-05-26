@@ -4,7 +4,7 @@
 @Author         :  Zzm
 @Version        :  zhangzheming_zzm@foxmail.com
 ------------------------------------
-@File           :  user_data.py
+@File           :  syn_user.py
 @Description    :  
 @CreateTime     :  2020/5/14 17:26
 ------------------------------------
