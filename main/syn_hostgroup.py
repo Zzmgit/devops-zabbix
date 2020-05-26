@@ -8,7 +8,7 @@
 @Description    :  
 @CreateTime     :  2020/5/20 14:55
 ------------------------------------
-@ModifyTime     :  
+@ModifyTime     :  2020/5/26 09:24
 """
 import os
 import gc
@@ -25,18 +25,14 @@ user = "xxxx"
 password = "xxxxx"
 
 zbx = Zabbix(url, user, password)
-# cm_host --> [{'business': xx, 'vis_name': 'BU00xx', 'ip': xx, 'hostname': xx, 'product_code': xx, 'os': 'Linux'},...]
 cm_host = get_host_data()
-# cm_hgrp --> ['PT00098_xx', 'BU00065_xx',]
 cm_hgrp = list(set([i['product_code']+"_"+i['business'][0] for i in cm_host]))
 za_hgrp = zbx.hostGroup_Get().get('result')
 za_hglist = [{'hgrpid': i.get('groupid'), 'name': i.get('name')} for i in za_hgrp]
 
 za_hgdata = []
-# za_hgdata --> [{'hgrpid': u'18', 'code': u'BU00049', 'name': 'xx'}
 for i in za_hglist:
     dic = {'hgrpid': i['hgrpid']}
-    # print type(str(json.dumps(i['name']).decode('utf-8')))
     if '_' in str(json.dumps(i['name']).decode('utf-8')):
         code_name = i['name'].split('_')
         dic['code'] = code_name[0]
@@ -53,7 +49,7 @@ za_hgtmp = [i['name'] for i in za_hgdata]
 cm_hgtmp = [i['name'] for i in cm_hgdata]
 
 # 批量创建主机群组，并校验数据是否重复
-new_gname = []    # new_gname --> [{'code': 'PT00098', 'name': 'xxxx'},...]
+new_gname = []
 for i in cm_hgdata:
     if i['name'] not in za_hgtmp:
         new_gname.append({'code': i['code'], 'name': i['name']})
@@ -73,9 +69,9 @@ new_df.to_excel(writer, sheet_name="new_hostgroup", header=None, index=False, )
 writer.save()
 
 msg = """
-    <h2>主机群组数据同步通知：</h2>
-    <p>监控小组注意，本次主机群组数据同步 "CMDB to Zabbix"，主机群组数据存在变更情况。具体变更数据，请查阅附件进行了解！</a></p>
-    """
+        <h2>主机群组数据同步通知：</h2>
+        <p>监控小组注意，本次主机群组数据同步 "CMDB to Zabbix"，主机群组数据存在变更情况。具体变更数据，请查阅附件进行了解！</a></p>
+      """
 root_dir = os.path.dirname(os.path.abspath('.'))
 attache = os.path.join(root_dir, r'main\hostgroup.xlsx')
 send_mail(body=msg, attachment=attache, attache_title='hostgroup_changed_data.xlsx')

@@ -8,7 +8,7 @@
 @Description    :  
 @CreateTime     :  2020/5/14 17:26
 ------------------------------------
-@ModifyTime     :  2020/5/20 14:24
+@ModifyTime     :  2020/5/26 09:24
 """
 import os
 import gc
@@ -25,14 +25,11 @@ user = "xxxx"
 password = "xxxxx"
 
 zbx = Zabbix(url, user, password)
-# cm_user --> [{'alias': u'wenziwu', 'name': u'\u6e29\u6893\u92c8'},...]
 cm_user = get_user_data()
 za_user = json.loads(zbx.user_Get())['result']
 
 za_ulist = [{'userid': i.get('userid'), 'alias': i.get('alias'), 'name': i.get('name')} for i in za_user]
-# 将zabbix所有已有用户bip存为list --> [u'Admin', u'guest', u'apiuser', u'zhanghuiyun02',...]
 za_tmp = [i['alias'] for i in za_ulist]
-# 将cmdb所有已有用户bip存为list --> [u'wenziwu', u'caishanlun', u'chenjunxu02',...]
 cm_tmp = [i['alias'] for i in cm_user]
 
 # 批量创建用户，并校验用户数据是否重复
@@ -47,7 +44,7 @@ for i in cm_user:
 
 # zabbix批量同步删除cmdb已删除用户数据
 del_name = []
-for i in za_ulist[6:]:    # za_ulist[6:]: 去除Zabbix已有的超级管理员账号
+for i in za_ulist[6:]:
     if i['alias'] not in cm_tmp:
         del_name.append({'BIP': i['alias'], 'name': i['name']})
         zbx.user_Delete(userid_list=[i['userid']])
@@ -60,9 +57,9 @@ new_df.to_excel(writer, sheet_name="new_user", header=None, index=False, )
 writer.save()
 
 msg = """
-    <h2>用户数据同步通知：</h2>
-    <p>监控小组注意，本次用户数据同步 "CMDB to Zabbix"，用户数据存在变更情况。具体变更数据，请查阅附件进行了解！</a></p>
-    """
+        <h2>用户数据同步通知：</h2>
+        <p>监控小组注意，本次用户数据同步 "CMDB to Zabbix"，用户数据存在变更情况。具体变更数据，请查阅附件进行了解！</a></p>
+      """
 root_dir = os.path.dirname(os.path.abspath('.'))
 attache = os.path.join(root_dir, r'main\z_user.xlsx')
 send_mail(body=msg, attachment=attache, attache_title='user_changed_data.xlsx')
