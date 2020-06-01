@@ -8,9 +8,8 @@
 @Description    :  
 @CreateTime     :  2020/5/13 11:16
 ------------------------------------
-@ModifyTime     :  2020/5/25 14:24
+@ModifyTime     :  2020/5/28 10:24
 """
-import json
 import requests
 
 
@@ -44,8 +43,9 @@ class Zabbix(object):
             }
         }
         resp = requests.post(url=self.url, json=data)
-        auth = resp.json().get("result")
-        return auth
+        if resp.json().has_key("error") or resp.status_code != 200:
+            raise BaseException("获取Zabbix服务Token失败,请检查当前网络是否可用,或用户名及密码是否正确！！！")
+        return resp.json().get("result")
 
     def user_Get(self):
         """
@@ -62,6 +62,8 @@ class Zabbix(object):
             "id": 1
         }
         resp = requests.post(url=self.url, json=data)
+        if resp.json().has_key("error") or resp.status_code != 200:
+            raise BaseException("服务已断开,获取用户信息失败！！！")
         return resp.json()
 
     def host_Get(self):
@@ -69,7 +71,40 @@ class Zabbix(object):
         获取主机信息
         :return:
         """
-        pass
+        data = {
+            "jsonrpc": "2.0",
+            "method": "host.get",
+            "params": {
+                "output": "extend"
+            },
+            "auth": self.auth,
+            "id": 1
+        }
+        resp = requests.post(url=self.url, json=data)
+        if resp.json().has_key("error") or resp.status_code != 200:
+            raise BaseException("服务已断开,获取主机信息失败！！！")
+        return resp.json()
+
+    def hostname_Get(self, hostname):
+        """
+        获取主机信息
+        :return:
+        """
+        data = {
+            "jsonrpc": "2.0",
+            "method": "host.get",
+            "params": {
+                "filter": {
+                    "host": hostname if isinstance(hostname, list) else [hostname]
+                },
+            },
+            "auth": self.auth,
+            "id": 1
+        }
+        resp = requests.post(url=self.url, json=data)
+        if resp.json().has_key("error") or resp.status_code != 200:
+            raise BaseException("服务已断开,获取指定主机信息失败！！！")
+        return True if resp.json().get('result') else False
 
     def userGroup_Get(self):
         """
@@ -86,9 +121,11 @@ class Zabbix(object):
             "id": 1
         }
         resp = requests.post(url=self.url, json=data)
+        if resp.json().has_key("error") or resp.status_code != 200:
+            raise BaseException("服务已断开,获取用户群组信息失败！！！")
         return resp.json()
 
-    def hostGroup_Get(self):
+    def hostGroup_Get(self, groupname=None):
         """
         获取主机群组信息
         :return:
@@ -102,8 +139,12 @@ class Zabbix(object):
             "auth": self.auth,
             "id": 1
         }
+        if groupname:
+            data["params"]["filter"] = {"name": groupname}
         resp = requests.post(url=self.url, json=data)
-        return resp.json()
+        if resp.json().has_key("error") or resp.status_code != 200:
+            raise BaseException("服务已断开,获取主机群组信息失败！！！")
+        return resp.json().get("result")
 
     def user_Create(self, alias, name):
         """
@@ -127,17 +168,42 @@ class Zabbix(object):
             "id": 1
         }
         resp = requests.post(url=self.url, json=data)
-        # 判断请求是否通过
         if resp.json().has_key("error") or resp.status_code != 200:
             raise BaseException("用户创建失败")
         return resp.json()
 
-    def host_Create(self):
+    def host_Create(self, hostname, ip, group_id, template_id, name, proxy, dns="", port="20050", host_type=1):
         """
         创建主机
         :return:
         """
-        pass
+        data = {
+            "jsonrpc": "2.0",
+            "method": "host.create",
+            "params": {
+                "name": name,
+                "host": hostname,
+                "interfaces": [
+                    {
+                        "type": host_type,
+                        "main": 1,
+                        "useip": 1,
+                        "ip": ip,
+                        "dns": dns,
+                        "port": port
+                    }
+                ],
+                "groups": [{"groupid": group_id}],
+                "templates": [{"templateid": template_id}],
+                "proxy_hostid": proxy
+            },
+            "auth": self.auth,
+            "id": 1
+        }
+        if not self.hostname_Get(hostname=hostname):
+            return requests.post(url=self.url, json=data).json()
+        else:
+            print("主机实例已存在！！！")
 
     def userGroup_Create(self, ugrpname):
         """
@@ -193,6 +259,8 @@ class Zabbix(object):
             "id": 1
         }
         resp = requests.post(url=self.url, json=data)
+        if resp.json().has_key("error") or resp.status_code != 200:
+            raise BaseException("用户删除失败")
         return resp.json()
 
     def host_Delete(self, hostid_list):
@@ -208,6 +276,8 @@ class Zabbix(object):
             "id": 1
         }
         resp = requests.post(url=self.url, json=data)
+        if resp.json().has_key("error") or resp.status_code != 200:
+            raise BaseException("主机删除失败")
         return resp.json()
 
     def userGroup_Delete(self, ugrpid_list):
@@ -224,6 +294,8 @@ class Zabbix(object):
             "id": 1
         }
         resp = requests.post(url=self.url, json=data)
+        if resp.json().has_key("error") or resp.status_code != 200:
+            raise BaseException("用户群组删除失败")
         return resp.json()
 
     def hostGroup_Delete(self, hgrpid_list):
@@ -239,4 +311,19 @@ class Zabbix(object):
             "id": 1
         }
         resp = requests.post(url=self.url, json=data)
+        if resp.json().has_key("error") or resp.status_code != 200:
+            raise BaseException("主机群组删除失败")
         return resp.json()
+
+    def template_Get(self):
+        data = {
+            "jsonrpc": "2.0",
+            "method": "template.get",
+            "params": {
+                "output": "extend",
+            },
+            "auth": self.auth,
+            "id": 1
+        }
+        resp = requests.post(url=self.url, json=data)
+        return resp.json().get('result')

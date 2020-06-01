@@ -8,7 +8,7 @@
 @Description    :  
 @CreateTime     :  2020/5/20 14:55
 ------------------------------------
-@ModifyTime     :  2020/5/26 09:24
+@ModifyTime     :  2020/5/26 16:57
 """
 import os
 import gc
@@ -53,13 +53,14 @@ new_gname = []
 for i in cm_hgdata:
     if i['name'] not in za_hgtmp:
         new_gname.append({'code': i['code'], 'name': i['name']})
-        print zbx.hostGroup_Create(hgrpname=(i['code'] + '_' + i['name']))
+        zbx.hostGroup_Create(hgrpname=(i['code'] + '_' + i['name']))
 
 # zabbix批量同步删除cmdb已删除用户群组数据
 del_gname = []
 for i in za_hgdata:
     if i['name'] not in cm_hgtmp:
         del_gname.append({'code': i['code'], 'name': i['name']})
+        zbx.hostGroup_Delete(hgrpid_list=[i['hgrpid']])
 
 writer = pd.ExcelWriter("_hostgroup.xlsx")
 del_df = pd.DataFrame(del_gname)
